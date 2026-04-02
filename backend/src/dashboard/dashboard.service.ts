@@ -49,4 +49,38 @@ export class DashboardService {
             take: 5
         });
     }
+
+    async getMonthlyTrends() {
+        const result = await this.prisma.$queryRaw<
+            { month: string; type: string; total: number }[]
+        >`
+            SELECT 
+            TO_CHAR(date, 'YYYY-MM') as month,
+            type,
+            SUM(amount) as total
+            FROM "FinancialRecord"
+            GROUP BY month, type
+            ORDER BY month ASC;
+        `;
+
+        const trendsMap = {};
+
+        result.forEach((row) => {
+            if (!trendsMap[row.month]) {
+            trendsMap[row.month] = {
+                month: row.month,
+                income: 0,
+                expense: 0,
+            };
+            }
+
+            if (row.type === 'INCOME') {
+            trendsMap[row.month].income = Number(row.total);
+            } else {
+            trendsMap[row.month].expense = Number(row.total);
+            }
+        });
+
+        return Object.values(trendsMap);
+    }
 }

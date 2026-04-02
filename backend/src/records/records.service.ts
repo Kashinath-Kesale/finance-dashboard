@@ -23,23 +23,44 @@ export class RecordsService {
     }
 
 
-    async getRecords(filters: any) {
-        const { type, category, startDate, endDate } = filters;
+    async getRecords(query: any) {
+        const { type, category, startDate, endDate, page = 1, limit = 10 } = query;
 
-        return this.prisma.financialRecord.findMany({
-            where: {
-                ...(type && { type }),
-                ...(category && { category }),
-                ...(startDate && endDate && {
-                    date: {
-                        gte: new Date(startDate),
-                        lte: new Date(endDate),
-                    },
-                }),
+        const pageNumber = Number(page);
+        const limitNumber = Number(limit);
+
+        const skip = (pageNumber - 1) * limitNumber;
+
+        const where = {
+            ...(type && { type }),
+            ...(category && { category }),
+            ...(startDate && endDate && {
+                date: {
+                    gte: new Date(startDate),
+                    lte: new Date(endDate),
+                },
+            }),
+        };
+
+        const [data, total] = await Promise.all([
+            this.prisma.financialRecord.findMany({
+                where,
+                orderBy: { date: 'desc' },
+                skip,
+                take: limitNumber,
+            }),
+            this.prisma.financialRecord.count({ where }),
+        ]);
+
+        return {
+            data,
+            meta: {
+                total,
+                page: pageNumber,
+                limit: limitNumber,
+                totalPages: Math.ceil(total / limitNumber),
             },
-
-            orderBy: { date: 'desc' },
-        });
+        };
     }
 
 

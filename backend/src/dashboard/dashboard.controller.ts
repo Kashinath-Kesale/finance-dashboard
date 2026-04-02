@@ -28,5 +28,11 @@ export class DashboardController {
     getRecent() {
         return this.dashboardService.getRecentActivity();
     }
+
+    @Get('trends')
+    @Roles('ANALYST', 'ADMIN')
+    getTrends() {
+        return this.dashboardService.getMonthlyTrends();
+    }
 }
 
