@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException,} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -24,7 +25,7 @@ export class RecordsService {
 
 
     async getRecords(query: any) {
-        const { type, category, startDate, endDate, page = 1, limit = 10 } = query;
+        const { type, category, startDate, endDate, search, page = 1, limit = 10 } = query;
 
         const pageNumber = Number(page);
         const limitNumber = Number(limit);
@@ -34,11 +35,28 @@ export class RecordsService {
         const where = {
             ...(type && { type }),
             ...(category && { category }),
-            ...(startDate && endDate && {
-                date: {
-                    gte: new Date(startDate),
-                    lte: new Date(endDate),
+            ...(search && {
+                OR: [
+                {
+                    notes: {
+                        contains: search,
+                        mode: 'insensitive' as const,
+                    },
                 },
+                {
+                    category: {
+                        contains: search,
+                        mode: 'insensitive' as const,
+                    },
+                },
+            ],
+        }),
+        ...(startDate &&
+            endDate && {
+            date: {
+                gte: new Date(startDate),
+                lte: new Date(endDate),
+            },
             }),
         };
 
