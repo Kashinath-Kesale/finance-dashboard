@@ -108,7 +108,7 @@ The data is modeled relationally to enforce strict integrity at the database lay
 I made reviewing this project super easy. You don't even need Postman or a local database because it is deployed live on Render!
 
 1. Open your browser and go to the live Swagger Dashboard: 
-   👉 `https://finance-dashboard-u9x9.onrender.com/api`
+   👉 [https://finance-dashboard-u9x9.onrender.com/api](https://finance-dashboard-u9x9.onrender.com/api)
 
 2. Go to the `auth` section and use the token generator: 
    `GET /auth/token?userId=first_user&role=ADMIN`
