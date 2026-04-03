@@ -68,7 +68,7 @@ The data is modeled relationally to enforce strict integrity at the database lay
   Enforced via a Foreign Key constraint. If a record is posted without a valid `User.id` payload, the database instantly rejects the transaction.
 
 - **Enums at the DB Level**
-  User Roles (`ADMIN`, `VIEWER`) and Record Types (`INCOME`, `EXPENSE`) are strictly enforced at the Postgres level.
+  User Roles (`ADMIN`, `ANALYST`, `VIEWER`) and Record Types (`INCOME`, `EXPENSE`) are strictly enforced at the Postgres level.
 
 <br/>
 
