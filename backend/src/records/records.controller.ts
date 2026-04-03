@@ -6,9 +6,9 @@ import { UpdateRecordDto } from './dto/update-record.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
-
-
+@ApiBearerAuth()
 @Controller('records')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class RecordsController {
